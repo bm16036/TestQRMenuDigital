@@ -1,0 +1,101 @@
+<section class="page">
+  <header class="page__header">
+    <div>
+      <h1>Gestión de categorías</h1>
+      <p>Administra las categorías del menú digital conectadas a la base de datos Neon.</p>
+    </div>
+  </header>
+
+  <div class="page__alerts" *ngIf="error() || successMessage()">
+    <div class="alert alert--error" *ngIf="error() as errorMessage">{{ errorMessage }}</div>
+    <div class="alert alert--success" *ngIf="successMessage() as success">{{ success }}</div>
+  </div>
+
+  <div class="page__content">
+    <section class="panel">
+      <h2>{{ formTitle() }}</h2>
+      <form class="category-form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-field">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Ej. Entradas"
+            [attr.aria-invalid]="nombreControl.invalid && nombreControl.touched"
+          />
+          <p class="field-error" *ngIf="nombreControl.hasError('required') && nombreControl.touched">
+            El nombre es obligatorio.
+          </p>
+          <p class="field-error" *ngIf="nombreControl.hasError('maxlength') && nombreControl.touched">
+            El nombre debe tener 100 caracteres o menos.
+          </p>
+        </div>
+
+        <div class="form-field">
+          <label for="descripcion">Descripción (opcional)</label>
+          <textarea
+            id="descripcion"
+            formControlName="descripcion"
+            rows="3"
+            placeholder="Describe brevemente la categoría"
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="saving()">
+            <span *ngIf="!saving(); else savingLabel">{{ submitLabel() }}</span>
+            <ng-template #savingLabel>Guardando...</ng-template>
+          </button>
+          <button type="button" class="ghost" (click)="cancelEdit()" *ngIf="isEditing()" [disabled]="saving()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel__header">
+        <h2>Listado de categorías</h2>
+        <button type="button" class="ghost" (click)="loadCategories()" [disabled]="loading()">
+          <span *ngIf="!loading(); else loadingLabel">Actualizar</span>
+        </button>
+        <ng-template #loadingLabel>Cargando...</ng-template>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading() && !hasCategories()">
+        <h3>No hay categorías registradas</h3>
+        <p>Crea una nueva categoría para comenzar a organizar el menú.</p>
+      </div>
+
+      <ul class="category-list" *ngIf="hasCategories()">
+        <li class="category-card" *ngFor="let category of categories(); trackBy: trackById">
+          <div>
+            <h3>{{ category.nombre }}</h3>
+            <p *ngIf="category.descripcion; else noDescription">{{ category.descripcion }}</p>
+            <ng-template #noDescription>
+              <p class="muted">Sin descripción</p>
+            </ng-template>
+          </div>
+          <div class="category-card__actions">
+            <button type="button" class="ghost" (click)="startEdit(category)">Editar</button>
+            <button
+              type="button"
+              class="danger"
+              (click)="deleteCategory(category)"
+              [disabled]="deletingId() === category.id"
+            >
+              <span *ngIf="deletingId() !== category.id; else deletingLabel">Eliminar</span>
+            </button>
+            <ng-template #deletingLabel>Eliminando...</ng-template>
+          </div>
+        </li>
+      </ul>
+
+      <div class="loader" *ngIf="loading()">
+        <span class="spinner" aria-hidden="true"></span>
+        <p>Cargando categorías...</p>
+      </div>
+    </section>
+  </div>
+</section>
