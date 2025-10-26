@@ -2,6 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 
 import { Category } from '../models/category.model';
 import { Company } from '../models/company.model';
+import { Menu } from '../models/menu.model';
 import { Product } from '../models/product.model';
 import { User } from '../models/user.model';
 
@@ -19,7 +20,7 @@ export class InMemoryDatabaseService {
       businessName: 'Restaurante S.A.',
       commercialName: 'Sabores del Mar',
       email: 'contacto@saboresdelmar.com',
-      phone: '+51 999 111 222',
+      phone: '+503 7890 1111',
       logoUrl: 'https://placehold.co/120x120?text=Sabores'
     },
     {
@@ -28,8 +29,29 @@ export class InMemoryDatabaseService {
       businessName: 'Cafetería S.R.L.',
       commercialName: 'Aroma Andino',
       email: 'hola@aromaandino.com',
-      phone: '+51 988 333 444',
+      phone: '+503 7456 3344',
       logoUrl: 'https://placehold.co/120x120?text=Aroma'
+    }
+  ]);
+
+  private readonly menusSignal = signal<Menu[]>([
+    {
+      id: 'menu-desayunos',
+      name: 'Desayunos',
+      active: true,
+      companyId: 'empresa-001'
+    },
+    {
+      id: 'menu-almuerzos',
+      name: 'Almuerzos',
+      active: true,
+      companyId: 'empresa-001'
+    },
+    {
+      id: 'menu-meriendas',
+      name: 'Meriendas',
+      active: false,
+      companyId: 'empresa-002'
     }
   ]);
 
@@ -62,6 +84,7 @@ export class InMemoryDatabaseService {
       price: 36.5,
       imageUrl: 'https://placehold.co/300x200?text=Ceviche',
       categoryId: 'cat-entradas',
+      menuIds: ['menu-almuerzos'],
       companyId: 'empresa-001'
     },
     {
@@ -71,6 +94,7 @@ export class InMemoryDatabaseService {
       price: 10.9,
       imageUrl: 'https://placehold.co/300x200?text=Limonada',
       categoryId: 'cat-bebidas',
+      menuIds: ['menu-desayunos', 'menu-almuerzos'],
       companyId: 'empresa-001'
     },
     {
@@ -80,6 +104,7 @@ export class InMemoryDatabaseService {
       price: 18,
       imageUrl: 'https://placehold.co/300x200?text=Tiramisu',
       categoryId: 'cat-postres',
+      menuIds: ['menu-meriendas'],
       companyId: 'empresa-002'
     }
   ]);
@@ -113,11 +138,13 @@ export class InMemoryDatabaseService {
 
   /** Accesos de solo lectura para las señales. */
   readonly companies = this.companiesSignal.asReadonly();
+  readonly menus = this.menusSignal.asReadonly();
   readonly categories = this.categoriesSignal.asReadonly();
   readonly products = this.productsSignal.asReadonly();
   readonly users = this.usersSignal.asReadonly();
 
   readonly companyCount = computed(() => this.companies().length);
+  readonly menuCount = computed(() => this.menus().length);
   readonly categoryCount = computed(() => this.categories().length);
   readonly productCount = computed(() => this.products().length);
   readonly activeUserCount = computed(() => this.users().filter((user) => user.active).length);
@@ -135,6 +162,21 @@ export class InMemoryDatabaseService {
 
   removeCompany(companyId: string): void {
     this.companiesSignal.update((list) => list.filter((company) => company.id !== companyId));
+  }
+
+  setMenus(menus: Menu[]): void {
+    this.menusSignal.set(structuredClone(menus));
+  }
+
+  upsertMenu(menu: Menu): void {
+    this.menusSignal.update((list) => {
+      const exists = list.some((item) => item.id === menu.id);
+      return exists ? list.map((item) => (item.id === menu.id ? menu : item)) : [...list, menu];
+    });
+  }
+
+  removeMenu(menuId: string): void {
+    this.menusSignal.update((list) => list.filter((menu) => menu.id !== menuId));
   }
 
   setCategories(categories: Category[]): void {

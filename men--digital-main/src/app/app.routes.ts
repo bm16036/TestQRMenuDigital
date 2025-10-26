@@ -35,6 +35,11 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'menus',
+        loadComponent: () =>
+          import('./features/menus/menu-management.component').then((m) => m.MenuManagementComponent)
+      },
+      {
         path: 'products',
         loadComponent: () =>
           import('./features/products/product-management.component').then(

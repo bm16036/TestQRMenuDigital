@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/services/auth.service';
 import { CategoryService } from '../../core/services/category.service';
+import { MenuService } from '../../core/services/menu.service';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../core/models/product.model';
 
@@ -18,10 +19,12 @@ export class ProductManagementComponent {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
+  private readonly menuService = inject(MenuService);
   private readonly authService = inject(AuthService);
 
   readonly products = this.productService.products;
   readonly categories = this.categoryService.categories;
+  readonly menus = this.menuService.menus;
 
   readonly selectedProductId = signal<string | null>(null);
   readonly isSaving = signal(false);
@@ -32,7 +35,8 @@ export class ProductManagementComponent {
     description: ['', [Validators.required, Validators.maxLength(240)]],
     price: [0, [Validators.required, Validators.min(0)]],
     imageUrl: ['', Validators.required],
-    categoryId: ['', Validators.required]
+    categoryId: ['', Validators.required],
+    menuIds: this.fb.nonNullable.control<string[]>([], { validators: Validators.minLength(1) })
   });
 
   readonly formattedPricePreview = computed(() => {
@@ -48,9 +52,18 @@ export class ProductManagementComponent {
     return map;
   });
 
+  readonly menuLookup = computed(() => {
+    const map = new Map<string, string>();
+    for (const menu of this.menus()) {
+      map.set(menu.id, menu.name);
+    }
+    return map;
+  });
+
   constructor() {
     const companyId = this.authService.currentUser()?.companyId;
     this.categoryService.load(companyId).subscribe();
+    this.menuService.load(companyId).subscribe();
     this.productService.load({ companyId }).subscribe();
   }
 
@@ -65,7 +78,8 @@ export class ProductManagementComponent {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
-      categoryId: product.categoryId
+      categoryId: product.categoryId,
+      menuIds: [...product.menuIds]
     });
   }
 
@@ -76,7 +90,8 @@ export class ProductManagementComponent {
       description: '',
       price: 0,
       imageUrl: '',
-      categoryId: ''
+      categoryId: '',
+      menuIds: []
     });
   }
 
@@ -116,5 +131,10 @@ export class ProductManagementComponent {
     }
 
     this.productService.delete(productId).subscribe();
+  }
+
+  getMenuNames(menuIds: string[]) {
+    const lookup = this.menuLookup();
+    return menuIds.map((id) => lookup.get(id)).filter((name): name is string => !!name);
   }
 }

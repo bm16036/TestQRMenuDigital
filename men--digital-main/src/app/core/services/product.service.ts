@@ -9,6 +9,7 @@ import { InMemoryDatabaseService } from './in-memory-database.service';
 export interface ProductFilters {
   companyId?: string;
   categoryId?: string;
+  menuId?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +27,8 @@ export class ProductService {
         .products()
         .filter((product) =>
           (!filters?.companyId || product.companyId === filters.companyId) &&
-          (!filters?.categoryId || product.categoryId === filters.categoryId)
+          (!filters?.categoryId || product.categoryId === filters.categoryId) &&
+          (!filters?.menuId || product.menuIds.includes(filters.menuId))
         );
       return of(filtered).pipe(delay(100));
     }
@@ -85,6 +87,10 @@ export class ProductService {
 
     if (filters.categoryId) {
       params['categoryId'] = filters.categoryId;
+    }
+
+    if (filters.menuId) {
+      params['menuId'] = filters.menuId;
     }
 
     return Object.keys(params).length ? params : undefined;
