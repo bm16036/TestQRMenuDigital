@@ -33,10 +33,16 @@ export class ProductManagementComponent {
   readonly productForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(80)]],
     description: ['', [Validators.required, Validators.maxLength(240)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    imageUrl: ['', Validators.required],
+    price: [0, [Validators.required, Validators.min(0.01)]],
+    imageUrl: [
+      '',
+      [Validators.required, Validators.pattern(/^(https?:\/\/).+/)]
+    ],
     categoryId: ['', Validators.required],
-    menuIds: this.fb.nonNullable.control<string[]>([], { validators: Validators.minLength(1) })
+    menuIds: this.fb.nonNullable.control<string[]>([], {
+      validators: (control) =>
+        control.value && control.value.length > 0 ? null : { required: true }
+    })
   });
 
   readonly formattedPricePreview = computed(() => {

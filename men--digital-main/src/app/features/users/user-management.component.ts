@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/services/auth.service';
 import { CompanyService } from '../../core/services/company.service';
@@ -33,7 +33,7 @@ export class UserManagementComponent {
     role: this.fb.nonNullable.control<UserRole>('USER', Validators.required),
     companyId: ['', Validators.required],
     active: [true],
-    password: ['']
+    password: this.fb.nonNullable.control('', [])
   });
 
   constructor() {
@@ -45,6 +45,8 @@ export class UserManagementComponent {
       this.userForm.get('companyId')?.setValue(companyId);
       this.userForm.get('companyId')?.disable();
     }
+
+    this.updatePasswordValidators(false);
   }
 
   edit(user: User) {
@@ -57,6 +59,8 @@ export class UserManagementComponent {
       active: user.active,
       password: ''
     });
+
+    this.updatePasswordValidators(true);
 
     if (this.authService.currentUser()?.companyId) {
       this.userForm.get('companyId')?.disable();
@@ -80,6 +84,27 @@ export class UserManagementComponent {
     } else {
       this.userForm.get('companyId')?.enable();
     }
+
+    this.updatePasswordValidators(false);
+  }
+
+  private updatePasswordValidators(isEditing: boolean) {
+    const passwordControl = this.userForm.controls.password;
+    const optionalPasswordValidator: ValidatorFn = (control) => {
+      const value = (control.value as string).trim();
+      if (!value) {
+        return null;
+      }
+      return value.length >= 8
+        ? null
+        : { minlength: { requiredLength: 8, actualLength: value.length } };
+    };
+    if (isEditing) {
+      passwordControl.setValidators([optionalPasswordValidator]);
+    } else {
+      passwordControl.setValidators([Validators.required, Validators.minLength(8)]);
+    }
+    passwordControl.updateValueAndValidity();
   }
 
   save() {

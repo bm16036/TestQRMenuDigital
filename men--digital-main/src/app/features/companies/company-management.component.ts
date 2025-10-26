@@ -22,12 +22,18 @@ export class CompanyManagementComponent {
   readonly isSaving = signal(false);
 
   readonly companyForm = this.fb.nonNullable.group({
-    taxId: ['', [Validators.required, Validators.maxLength(20)]],
+    taxId: ['', [Validators.required, Validators.pattern(/^\d{11,13}$/)]],
     businessName: ['', [Validators.required, Validators.maxLength(120)]],
     commercialName: ['', [Validators.required, Validators.maxLength(80)]],
     email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required, Validators.maxLength(20)]],
-    logoUrl: ['', Validators.required]
+    phone: [
+      '',
+      [Validators.required, Validators.pattern(/^[+()\d\s-]{7,20}$/)]
+    ],
+    logoUrl: [
+      '',
+      [Validators.required, Validators.pattern(/^(https?:\/\/).+/)]
+    ]
   });
 
   constructor() {
