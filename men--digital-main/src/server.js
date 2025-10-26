@@ -6,23 +6,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🚀 Ruta raíz de prueba
+// Ruta raíz de prueba
 app.get("/", (req, res) => {
-  res.send("🚀 API del menú digital funcionando");
+  res.send("API del menú digital funcionando");
 });
 
-// 📋 Obtener todas las categorías
+// Obtener todas las categorías
 app.get("/api/categorias", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM categorias ORDER BY id ASC");
     res.json(result.rows);
   } catch (err) {
-    console.error("❌ Error al obtener categorías:", err.message);
+    console.error("Error al obtener categorías:", err.message);
     res.status(500).json({ error: "Error al obtener categorías" });
   }
 });
 
-// ➕ Agregar una nueva categoría
+// Agregar una nueva categoría
 app.post("/api/categorias", async (req, res) => {
   try {
     const { nombre, descripcion } = req.body;
@@ -33,12 +33,12 @@ app.post("/api/categorias", async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error("❌ Error al agregar categoría:", err.message);
+    console.error("Error al agregar categoría:", err.message);
     res.status(500).json({ error: "Error al agregar categoría" });
   }
 });
 
-// ✏️ Actualizar una categoría
+// Actualizar una categoría
 app.put("/api/categorias/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,12 +54,12 @@ app.put("/api/categorias/:id", async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (err) {
-    console.error("❌ Error al actualizar categoría:", err.message);
+    console.error("Error al actualizar categoría:", err.message);
     res.status(500).json({ error: "Error al actualizar categoría" });
   }
 });
 
-// 🗑️ Eliminar una categoría
+// Eliminar una categoría
 app.delete("/api/categorias/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -69,16 +69,16 @@ app.delete("/api/categorias/:id", async (req, res) => {
     }
     res.json({ mensaje: "Categoría eliminada correctamente" });
   } catch (err) {
-    console.error("❌ Error al eliminar categoría:", err.message);
+    console.error("Error al eliminar categoría:", err.message);
     res.status(500).json({ error: "Error al eliminar categoría" });
   }
 });
 
-// 🚀 Iniciar servidor
+// Iniciar servidor
 console.clear();
-console.log("🔄 Iniciando servidor...");
+console.log("Iniciando servidor...");
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
