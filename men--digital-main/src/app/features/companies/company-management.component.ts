@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CompanyService } from '../../core/services/company.service';
 import { Company } from '../../core/models/company.model';
+import { EMAIL_REGEX } from '../../core/constants/validation.constants';
 
 @Component({
   selector: 'app-company-management',
@@ -25,7 +26,7 @@ export class CompanyManagementComponent {
     taxId: ['', [Validators.required, Validators.pattern(/^\d{11,13}$/)]],
     businessName: ['', [Validators.required, Validators.maxLength(120)]],
     commercialName: ['', [Validators.required, Validators.maxLength(80)]],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.pattern(EMAIL_REGEX)]],
     phone: [
       '',
       [Validators.required, Validators.pattern(/^[+()\d\s-]{7,20}$/)]

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { CompanyService } from '../../../core/services/company.service';
+import { EMAIL_REGEX } from '../../../core/constants/validation.constants';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent {
   readonly errorMessage = signal<string | null>(null);
 
   readonly loginForm = this.fb.nonNullable.group({
-    username: ['', [Validators.required, Validators.email]],
+    username: ['', [Validators.required, Validators.pattern(EMAIL_REGEX)]],
     password: ['', Validators.required],
     companyId: ['', Validators.required]
   });
