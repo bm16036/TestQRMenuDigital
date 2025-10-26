@@ -1,0 +1,188 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard__header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #111827;
+}
+
+.dashboard__header p {
+  margin-top: 0.25rem;
+  color: #6b7280;
+}
+
+.dashboard__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(17, 24, 39, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid rgba(17, 24, 39, 0.05);
+}
+
+.metric-card__label {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.metric-card__value {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.accent-primary {
+  border-top: 4px solid #3b82f6;
+}
+
+.accent-secondary {
+  border-top: 4px solid #8b5cf6;
+}
+
+.accent-tertiary {
+  border-top: 4px solid #f59e0b;
+}
+
+.dashboard__grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.panel {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+  border: 1px solid rgba(17, 24, 39, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #111827;
+}
+
+.panel__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.panel__header span {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.panel__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.panel__table th,
+.panel__table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+  text-align: left;
+}
+
+.panel__table th {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.panel__table--center {
+  text-align: center;
+}
+
+.panel__empty {
+  margin: 0;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.status-pill--active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.product-list__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.product-list__item img {
+  width: 64px;
+  height: 64px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+
+.product-list__name {
+  margin: 0;
+  font-weight: 600;
+  color: #111827;
+}
+
+.product-list__description {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.product-list__price {
+  font-weight: 700;
+  color: #111827;
+}
+
+@media (max-width: 600px) {
+  .product-list__item {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .product-list__price {
+    justify-self: center;
+  }
+}

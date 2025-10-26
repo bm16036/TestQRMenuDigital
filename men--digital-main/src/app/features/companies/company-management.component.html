@@ -1,0 +1,100 @@
+<section class="feature">
+  <header class="feature__header">
+    <div>
+      <h1>Empresas</h1>
+      <p>Registra los negocios que utilizarán el sistema y sus datos fiscales.</p>
+    </div>
+    <button type="button" class="feature__reset" *ngIf="selectedCompanyId()" (click)="cancelEdit()">
+      Cancelar edición
+    </button>
+  </header>
+
+  <div class="feature__grid">
+    <section class="panel">
+      <h2>{{ selectedCompanyId() ? 'Editar empresa' : 'Nueva empresa' }}</h2>
+
+      <form [formGroup]="companyForm" (ngSubmit)="save()" class="form">
+        <label class="form__field">
+          <span>RUC / Registro fiscal</span>
+          <input type="text" formControlName="taxId" placeholder="RUC" />
+          <small class="form__error" *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched">
+            Ingresa un RUC válido.
+          </small>
+        </label>
+
+        <label class="form__field">
+          <span>Razón social</span>
+          <input type="text" formControlName="businessName" placeholder="Nombre legal" />
+        </label>
+
+        <label class="form__field">
+          <span>Nombre comercial</span>
+          <input type="text" formControlName="commercialName" placeholder="Nombre para clientes" />
+        </label>
+
+        <label class="form__field">
+          <span>Correo electrónico</span>
+          <input type="email" formControlName="email" placeholder="contacto@empresa.com" />
+        </label>
+
+        <label class="form__field">
+          <span>Teléfono</span>
+          <input type="tel" formControlName="phone" placeholder="+51 000 000 000" />
+        </label>
+
+        <label class="form__field">
+          <span>Logo</span>
+          <input type="url" formControlName="logoUrl" placeholder="https://" />
+          <small class="form__hint">Se recomienda una imagen cuadrada en formato PNG o JPG.</small>
+        </label>
+
+        <button type="submit" class="form__submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar empresa' }}
+        </button>
+
+        <p class="form__feedback" *ngIf="feedbackMessage()">{{ feedbackMessage() }}</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Listado de empresas</h2>
+
+      <table class="table" *ngIf="companies().length; else emptyState">
+        <thead>
+          <tr>
+            <th>Comercial</th>
+            <th>RUC</th>
+            <th>Contacto</th>
+            <th class="table__actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let company of companies()">
+            <td>
+              <div class="company-info">
+                <img [src]="company.logoUrl" [alt]="company.commercialName" />
+                <div>
+                  <p>{{ company.commercialName }}</p>
+                  <small>{{ company.businessName }}</small>
+                </div>
+              </div>
+            </td>
+            <td>{{ company.taxId }}</td>
+            <td>
+              <p class="company-info__contact">{{ company.email }}</p>
+              <p class="company-info__contact">{{ company.phone }}</p>
+            </td>
+            <td class="table__actions">
+              <button type="button" (click)="edit(company)">Editar</button>
+              <button type="button" class="danger" (click)="delete(company.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyState>
+        <p class="panel__empty">Registra la primera empresa para comenzar.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

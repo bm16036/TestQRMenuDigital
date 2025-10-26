@@ -1,0 +1,101 @@
+<section class="feature">
+  <header class="feature__header">
+    <div>
+      <h1>Productos y platillos</h1>
+      <p>Organiza tu oferta por categoría y mantén tu menú actualizado.</p>
+    </div>
+    <button type="button" class="feature__reset" *ngIf="selectedProductId()" (click)="cancelEdit()">
+      Cancelar edición
+    </button>
+  </header>
+
+  <div class="feature__grid">
+    <section class="panel">
+      <h2>{{ selectedProductId() ? 'Editar producto' : 'Nuevo producto' }}</h2>
+
+      <form [formGroup]="productForm" (ngSubmit)="save()" class="form">
+        <label class="form__field">
+          <span>Nombre</span>
+          <input type="text" formControlName="name" placeholder="Ej. Ceviche clásico" />
+          <small class="form__error" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+            Ingresa un nombre válido.
+          </small>
+        </label>
+
+        <label class="form__field">
+          <span>Descripción</span>
+          <textarea formControlName="description" placeholder="Describe brevemente el platillo."></textarea>
+          <small class="form__error" *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+            Describe el producto para tus clientes.
+          </small>
+        </label>
+
+        <label class="form__field">
+          <span>Precio (S/)</span>
+          <input type="number" formControlName="price" min="0" step="0.1" />
+          <small class="form__hint">Previsualización: S/ {{ formattedPricePreview() }}</small>
+        </label>
+
+        <label class="form__field">
+          <span>Imagen</span>
+          <input type="url" formControlName="imageUrl" placeholder="https://" />
+          <small class="form__hint">Utiliza una URL accesible públicamente.</small>
+        </label>
+
+        <label class="form__field">
+          <span>Categoría</span>
+          <select formControlName="categoryId">
+            <option value="" disabled>Selecciona una categoría</option>
+            <option *ngFor="let category of categories()" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </label>
+
+        <button type="submit" class="form__submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar producto' }}
+        </button>
+
+        <p class="form__feedback" *ngIf="feedbackMessage()">{{ feedbackMessage() }}</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Listado de productos</h2>
+
+      <table class="table" *ngIf="products().length; else emptyState">
+        <thead>
+          <tr>
+            <th>Platillo</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th class="table__actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products()">
+            <td>
+              <div class="product-info">
+                <img [src]="product.imageUrl" [alt]="product.name" />
+                <div>
+                  <p>{{ product.name }}</p>
+                  <small>{{ product.description }}</small>
+                </div>
+              </div>
+            </td>
+            <td>S/ {{ product.price | number: '1.2-2' }}</td>
+            <td>{{ getCategoryName(product.categoryId) }}</td>
+            <td class="table__actions">
+              <button type="button" (click)="edit(product)">Editar</button>
+              <button type="button" class="danger" (click)="delete(product.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyState>
+        <p class="panel__empty">Registra tus productos para comenzar a mostrarlos.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

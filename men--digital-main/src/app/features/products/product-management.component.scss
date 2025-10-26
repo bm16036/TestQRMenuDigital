@@ -1,0 +1,33 @@
+@use '../../styles/feature-layout' as feature;
+
+@include feature.feature-shell;
+
+.product-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.product-info img {
+  width: 56px;
+  height: 56px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+
+.product-info p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.product-info small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6b7280;
+}
+
+.form__hint {
+  color: #6b7280;
+  font-size: 0.75rem;
+}

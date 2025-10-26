@@ -1,0 +1,70 @@
+<section class="feature">
+  <header class="feature__header">
+    <div>
+      <h1>Categorías</h1>
+      <p>Administra las secciones del menú digital de tu empresa.</p>
+    </div>
+    <button type="button" class="feature__reset" *ngIf="selectedCategoryId()" (click)="cancelEdit()">
+      Cancelar edición
+    </button>
+  </header>
+
+  <div class="feature__grid">
+    <section class="panel">
+      <h2>{{ selectedCategoryId() ? 'Editar categoría' : 'Nueva categoría' }}</h2>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="save()" class="form">
+        <label class="form__field">
+          <span>Nombre</span>
+          <input type="text" formControlName="name" placeholder="Ej. Bebidas" />
+          <small class="form__error" *ngIf="nameControl?.invalid && nameControl?.touched">
+            Ingresa un nombre válido (máximo 60 caracteres).
+          </small>
+        </label>
+
+        <label class="form__checkbox">
+          <input type="checkbox" formControlName="active" />
+          <span>Mostrar en el menú digital</span>
+        </label>
+
+        <button type="submit" class="form__submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar' }}
+        </button>
+
+        <p class="form__feedback" *ngIf="feedbackMessage()">{{ feedbackMessage() }}</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Listado de categorías</h2>
+
+      <table class="table" *ngIf="categories().length; else emptyState">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th class="table__actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories()">
+            <td>{{ category.name }}</td>
+            <td>
+              <span class="status" [class.status--active]="category.active">
+                {{ category.active ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+            <td class="table__actions">
+              <button type="button" (click)="edit(category)">Editar</button>
+              <button type="button" class="danger" (click)="delete(category.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyState>
+        <p class="panel__empty">Crea tu primera categoría para comenzar.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

@@ -1,0 +1,114 @@
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), rgba(17, 24, 39, 0.08));
+  padding: 2rem;
+}
+
+.login__card {
+  width: min(420px, 100%);
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.login__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #1d4ed8;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.login__header h1 {
+  margin: 0.75rem 0 0;
+  font-size: 2.2rem;
+  color: #111827;
+}
+
+.login__header p {
+  margin: 0.75rem 0 0;
+  color: #6b7280;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.login__form input,
+.login__form select {
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 0.85rem;
+  padding: 0.85rem 1rem;
+  font: inherit;
+}
+
+.login__form small {
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+.login__form button {
+  margin-top: 0.5rem;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login__form button[disabled] {
+  background: rgba(37, 99, 235, 0.5);
+  cursor: default;
+}
+
+.login__form button:not([disabled]):hover {
+  background: #1d4ed8;
+}
+
+.login__error {
+  margin: 0;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.login__footer {
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #1d4ed8;
+}
+
+.login__footer p {
+  margin: 0.25rem 0;
+}
+
+@media (max-width: 480px) {
+  .login__card {
+    padding: 1.75rem;
+  }
+}

@@ -1,0 +1,67 @@
+<section class="dashboard">
+  <header class="dashboard__header">
+    <h1>Resumen general</h1>
+    <p>Visualiza el estado actual del menú digital de tu empresa.</p>
+  </header>
+
+  <section class="dashboard__metrics">
+    <article class="metric-card" *ngFor="let metric of metrics()" [class]="metric.accent">
+      <p class="metric-card__label">{{ metric.label }}</p>
+      <p class="metric-card__value">{{ metric.value }}</p>
+    </article>
+  </section>
+
+  <div class="dashboard__grid">
+    <section class="panel">
+      <header class="panel__header">
+        <h2>Categorías</h2>
+        <span>{{ categories().length }} registradas</span>
+      </header>
+
+      <table class="panel__table" *ngIf="categories().length; else emptyCategories">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th class="panel__table--center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories()">
+            <td>{{ category.name }}</td>
+            <td class="panel__table--center">
+              <span class="status-pill" [class.status-pill--active]="category.active">
+                {{ category.active ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyCategories>
+        <p class="panel__empty">Todavía no se han registrado categorías.</p>
+      </ng-template>
+    </section>
+
+    <section class="panel">
+      <header class="panel__header">
+        <h2>Últimos productos</h2>
+        <span>{{ products().length }} totales</span>
+      </header>
+
+      <ul class="product-list" *ngIf="latestProducts().length; else emptyProducts">
+        <li class="product-list__item" *ngFor="let product of latestProducts()">
+          <img [src]="product.imageUrl" [alt]="product.name" />
+          <div>
+            <p class="product-list__name">{{ product.name }}</p>
+            <p class="product-list__description">{{ product.description }}</p>
+          </div>
+          <span class="product-list__price">S/ {{ product.price | number: '1.2-2' }}</span>
+        </li>
+      </ul>
+
+      <ng-template #emptyProducts>
+        <p class="panel__empty">Registra tus primeros platillos para mostrarlos aquí.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

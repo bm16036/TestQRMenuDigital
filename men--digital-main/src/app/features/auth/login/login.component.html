@@ -1,0 +1,52 @@
+<section class="login">
+  <article class="login__card">
+    <header class="login__header">
+      <span class="login__badge">Administración</span>
+      <h1>Menú Digital</h1>
+      <p>Accede al panel para gestionar categorías, productos y usuarios.</p>
+    </header>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="login__form">
+      <label>
+        <span>Correo electrónico</span>
+        <input type="email" formControlName="username" placeholder="admin@empresa.com" />
+        <small *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          Ingresa un correo válido.
+        </small>
+      </label>
+
+      <label>
+        <span>Contraseña</span>
+        <input type="password" formControlName="password" placeholder="Ingresa tu contraseña" />
+        <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          La contraseña es obligatoria.
+        </small>
+      </label>
+
+      <label>
+        <span>Empresa</span>
+        <select formControlName="companyId">
+          <option value="" disabled>Selecciona tu empresa</option>
+          <option *ngFor="let company of companies()" [value]="company.id">
+            {{ company.commercialName }}
+          </option>
+        </select>
+        <small *ngIf="loginForm.get('companyId')?.invalid && loginForm.get('companyId')?.touched">
+          Selecciona la empresa a la que perteneces.
+        </small>
+      </label>
+
+      <button type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+
+      <p class="login__error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    </form>
+
+    <footer class="login__footer">
+      <p>Credenciales de prueba:</p>
+      <p><strong>Correo:</strong> admin@saboresdelmar.com</p>
+      <p><strong>Contraseña:</strong> admin123</p>
+    </footer>
+  </article>
+</section>

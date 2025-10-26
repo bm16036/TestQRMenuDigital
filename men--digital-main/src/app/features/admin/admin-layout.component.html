@@ -1,0 +1,56 @@
+<section class="admin-shell">
+  <aside class="admin-shell__sidebar">
+    <div class="brand">
+      <span class="brand__logo">QR</span>
+      <div class="brand__text">
+        <p class="brand__title">Menú Digital</p>
+        <p class="brand__subtitle">Panel administrativo</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="dashboard" routerLinkActive="menu__link--active" [routerLinkActiveOptions]="{ exact: true }" class="menu__link">
+        <span>Resumen</span>
+      </a>
+      <a routerLink="categories" routerLinkActive="menu__link--active" class="menu__link">
+        <span>Categorías</span>
+      </a>
+      <a routerLink="products" routerLinkActive="menu__link--active" class="menu__link">
+        <span>Productos</span>
+      </a>
+      <a routerLink="users" routerLinkActive="menu__link--active" class="menu__link">
+        <span>Usuarios</span>
+      </a>
+      <a routerLink="companies" routerLinkActive="menu__link--active" class="menu__link">
+        <span>Empresas</span>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="admin-shell__content">
+    <header class="toolbar">
+      <div class="toolbar__info" *ngIf="user() as activeUser">
+        <div class="toolbar__company" *ngIf="currentCompany() as company">
+          <img [src]="company.logoUrl" [alt]="company.commercialName" />
+          <div>
+            <p class="toolbar__company-name">{{ company.commercialName }}</p>
+            <p class="toolbar__company-email">{{ company.email }}</p>
+          </div>
+        </div>
+
+        <div class="toolbar__user">
+          <p class="toolbar__user-name">{{ activeUser.fullName }}</p>
+          <p class="toolbar__user-role">{{ activeUser.role }}</p>
+        </div>
+      </div>
+
+      <button type="button" class="toolbar__logout" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <main class="admin-shell__main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</section>
