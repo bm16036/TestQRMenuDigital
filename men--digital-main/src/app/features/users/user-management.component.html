@@ -36,6 +36,9 @@
             <option value="ADMIN">Administrador</option>
             <option value="USER">Usuario</option>
           </select>
+          <small class="form__error" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+            Selecciona el rol que tendrá el usuario.
+          </small>
         </label>
 
         <label class="form__field">
@@ -46,11 +49,17 @@
               {{ company.commercialName }}
             </option>
           </select>
+          <small class="form__error" *ngIf="userForm.get('companyId')?.invalid && userForm.get('companyId')?.touched">
+            Selecciona la empresa a la que pertenece el usuario.
+          </small>
         </label>
 
         <label class="form__field" *ngIf="!selectedUserId()">
           <span>Contraseña temporal</span>
           <input type="password" formControlName="password" placeholder="Se solicitará cambio al iniciar sesión" />
+          <small class="form__error" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+            La contraseña debe tener al menos 8 caracteres.
+          </small>
         </label>
 
         <label class="form__checkbox">

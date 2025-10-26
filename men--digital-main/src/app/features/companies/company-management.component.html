@@ -18,33 +18,48 @@
           <span>RUC / Registro fiscal</span>
           <input type="text" formControlName="taxId" placeholder="RUC" />
           <small class="form__error" *ngIf="companyForm.get('taxId')?.invalid && companyForm.get('taxId')?.touched">
-            Ingresa un RUC válido.
+            Ingresa un RUC válido de 11 a 13 dígitos.
           </small>
         </label>
 
         <label class="form__field">
           <span>Razón social</span>
           <input type="text" formControlName="businessName" placeholder="Nombre legal" />
+          <small class="form__error" *ngIf="companyForm.get('businessName')?.invalid && companyForm.get('businessName')?.touched">
+            La razón social es obligatoria.
+          </small>
         </label>
 
         <label class="form__field">
           <span>Nombre comercial</span>
           <input type="text" formControlName="commercialName" placeholder="Nombre para clientes" />
+          <small class="form__error" *ngIf="companyForm.get('commercialName')?.invalid && companyForm.get('commercialName')?.touched">
+            El nombre comercial es obligatorio.
+          </small>
         </label>
 
         <label class="form__field">
           <span>Correo electrónico</span>
           <input type="email" formControlName="email" placeholder="contacto@empresa.com" />
+          <small class="form__error" *ngIf="companyForm.get('email')?.invalid && companyForm.get('email')?.touched">
+            Ingresa un correo electrónico válido.
+          </small>
         </label>
 
         <label class="form__field">
           <span>Teléfono</span>
           <input type="tel" formControlName="phone" placeholder="+503 0000 0000" />
+          <small class="form__error" *ngIf="companyForm.get('phone')?.invalid && companyForm.get('phone')?.touched">
+            Ingresa un teléfono válido (puede incluir prefijo internacional).
+          </small>
         </label>
 
         <label class="form__field">
           <span>Logo</span>
           <input type="url" formControlName="logoUrl" placeholder="https://" />
+          <small class="form__error" *ngIf="companyForm.get('logoUrl')?.invalid && companyForm.get('logoUrl')?.touched">
+            Ingresa una URL válida que apunte al logo de la empresa.
+          </small>
           <small class="form__hint">Se recomienda una imagen cuadrada en formato PNG o JPG.</small>
         </label>
 

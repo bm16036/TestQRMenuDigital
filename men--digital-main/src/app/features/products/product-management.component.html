@@ -32,14 +32,20 @@
 
         <label class="form__field">
           <span>Precio ($)</span>
-          <input type="number" formControlName="price" min="0" step="0.1" />
+          <input type="number" formControlName="price" min="0.01" step="0.01" />
           <small class="form__hint">Previsualización: $ {{ formattedPricePreview() }}</small>
+          <small class="form__error" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+            Ingresa un precio mayor a cero.
+          </small>
         </label>
 
         <label class="form__field">
           <span>Imagen</span>
           <input type="url" formControlName="imageUrl" placeholder="https://" />
           <small class="form__hint">Utiliza una URL accesible públicamente.</small>
+          <small class="form__error" *ngIf="productForm.get('imageUrl')?.invalid && productForm.get('imageUrl')?.touched">
+            Ingresa una URL válida para la imagen.
+          </small>
         </label>
 
         <label class="form__field">
@@ -50,6 +56,9 @@
               {{ category.name }}
             </option>
           </select>
+          <small class="form__error" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+            Selecciona la categoría a la que pertenece el producto.
+          </small>
         </label>
 
         <fieldset class="form__field form__field--checkbox-group">
