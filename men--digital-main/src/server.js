@@ -1,14 +1,20 @@
 import express from "express";
 import pool from "./db.js";
 import cors from "cors";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ruta raíz de prueba
-app.get("/", (req, res) => {
-  res.send("API del menú digital funcionando");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const browserDistPath = path.join(__dirname, "../dist/menu-digital/browser");
+
+// Endpoint de salud para el backend
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
 // Obtener todas las categorías
@@ -72,6 +78,26 @@ app.delete("/api/categorias/:id", async (req, res) => {
     console.error("Error al eliminar categoría:", err.message);
     res.status(500).json({ error: "Error al eliminar categoría" });
   }
+});
+
+// Servir la aplicación Angular ya compilada
+app.use(
+  express.static(browserDistPath, {
+    index: false,
+  })
+);
+
+// Cualquier ruta que no sea API devuelve la aplicación Angular
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api")) {
+    return next();
+  }
+
+  res.sendFile(path.join(browserDistPath, "index.html"), (err) => {
+    if (err) {
+      next(err);
+    }
+  });
 });
 
 // Iniciar servidor
