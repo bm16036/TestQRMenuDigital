@@ -31,9 +31,9 @@
         </label>
 
         <label class="form__field">
-          <span>Precio (S/)</span>
+          <span>Precio ($)</span>
           <input type="number" formControlName="price" min="0" step="0.1" />
-          <small class="form__hint">Previsualización: S/ {{ formattedPricePreview() }}</small>
+          <small class="form__hint">Previsualización: $ {{ formattedPricePreview() }}</small>
         </label>
 
         <label class="form__field">
@@ -52,6 +52,20 @@
           </select>
         </label>
 
+        <label class="form__field">
+          <span>Menús</span>
+          <select formControlName="menuIds" multiple size="4">
+            <option *ngFor="let menu of menus()" [value]="menu.id" [disabled]="!menu.active">
+              {{ menu.name }}
+              {{ menu.active ? '' : '(Inactivo)' }}
+            </option>
+          </select>
+          <small class="form__hint">Selecciona uno o varios menús donde se mostrará el producto.</small>
+          <small class="form__error" *ngIf="productForm.get('menuIds')?.invalid && productForm.get('menuIds')?.touched">
+            El producto debe pertenecer al menos a un menú activo.
+          </small>
+        </label>
+
         <button type="submit" class="form__submit" [disabled]="isSaving()">
           {{ isSaving() ? 'Guardando...' : 'Guardar producto' }}
         </button>
@@ -68,7 +82,7 @@
           <tr>
             <th>Platillo</th>
             <th>Precio</th>
-            <th>Categoría</th>
+            <th>Categoría y menús</th>
             <th class="table__actions">Acciones</th>
           </tr>
         </thead>
@@ -83,8 +97,16 @@
                 </div>
               </div>
             </td>
-            <td>S/ {{ product.price | number: '1.2-2' }}</td>
-            <td>{{ getCategoryName(product.categoryId) }}</td>
+            <td>$ {{ product.price | number: '1.2-2' }}</td>
+            <td>
+              <div class="table__category">{{ getCategoryName(product.categoryId) }}</div>
+              <ul class="product-menus" *ngIf="product.menuIds.length; else noMenus">
+                <li *ngFor="let menu of getMenuNames(product.menuIds)">{{ menu }}</li>
+              </ul>
+              <ng-template #noMenus>
+                <span class="product-menus product-menus--empty">Sin menús asignados</span>
+              </ng-template>
+            </td>
             <td class="table__actions">
               <button type="button" (click)="edit(product)">Editar</button>
               <button type="button" class="danger" (click)="delete(product.id)">Eliminar</button>

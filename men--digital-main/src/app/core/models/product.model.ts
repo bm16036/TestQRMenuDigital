@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   imageUrl: string;
   categoryId: string;
+  menuIds: string[];
   companyId: string;
   createdAt?: string;
   updatedAt?: string;

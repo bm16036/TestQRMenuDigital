@@ -1,0 +1,70 @@
+<section class="feature">
+  <header class="feature__header">
+    <div>
+      <h1>Menús</h1>
+      <p>Define los menús disponibles y controla si se muestran a tus clientes.</p>
+    </div>
+    <button type="button" class="feature__reset" *ngIf="selectedMenuId()" (click)="cancelEdit()">
+      Cancelar edición
+    </button>
+  </header>
+
+  <div class="feature__grid">
+    <section class="panel">
+      <h2>{{ selectedMenuId() ? 'Editar menú' : 'Nuevo menú' }}</h2>
+
+      <form [formGroup]="menuForm" (ngSubmit)="save()" class="form">
+        <label class="form__field">
+          <span>Nombre</span>
+          <input type="text" formControlName="name" placeholder="Ej. Desayunos" />
+          <small class="form__error" *ngIf="nameControl?.invalid && nameControl?.touched">
+            Ingresa un nombre válido (máximo 60 caracteres).
+          </small>
+        </label>
+
+        <label class="form__checkbox">
+          <input type="checkbox" formControlName="active" />
+          <span>Habilitar en el menú digital</span>
+        </label>
+
+        <button type="submit" class="form__submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar menú' }}
+        </button>
+
+        <p class="form__feedback" *ngIf="feedbackMessage()">{{ feedbackMessage() }}</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Listado de menús</h2>
+
+      <table class="table" *ngIf="menus().length; else emptyState">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th class="table__actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let menu of menus()">
+            <td>{{ menu.name }}</td>
+            <td>
+              <span class="status" [class.status--active]="menu.active">
+                {{ menu.active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="table__actions">
+              <button type="button" (click)="edit(menu)">Editar</button>
+              <button type="button" class="danger" (click)="delete(menu.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyState>
+        <p class="panel__empty">Registra tu primer menú para comenzar.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

@@ -31,3 +31,25 @@
   color: #6b7280;
   font-size: 0.75rem;
 }
+
+.table__category {
+  font-weight: 600;
+}
+
+.product-menus {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+  color: #4b5563;
+  font-size: 0.8rem;
+}
+
+.product-menus li {
+  list-style: disc;
+}
+
+.product-menus--empty {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
