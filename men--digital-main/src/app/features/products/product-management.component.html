@@ -52,12 +52,25 @@
           <span>Categoría</span>
           <select formControlName="categoryId">
             <option value="" disabled>Selecciona una categoría</option>
-            <option *ngFor="let category of categories()" [value]="category.id">
-              {{ category.name }}
+            <option
+              *ngFor="let category of categories()"
+              [value]="category.id"
+              [disabled]="!category.active"
+            >
+              {{ category.name }}{{ category.active ? '' : ' (Inactiva)' }}
             </option>
           </select>
-          <small class="form__error" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
+          <small
+            class="form__error"
+            *ngIf="categoryIdControl.hasError('required') && categoryIdControl.touched"
+          >
             Selecciona la categoría a la que pertenece el producto.
+          </small>
+          <small
+            class="form__error"
+            *ngIf="categoryIdControl.hasError('inactiveCategory') && categoryIdControl.touched"
+          >
+            La categoría seleccionada está inactiva.
           </small>
         </label>
 

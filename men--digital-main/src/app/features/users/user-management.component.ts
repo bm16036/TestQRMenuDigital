@@ -6,6 +6,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { CompanyService } from '../../core/services/company.service';
 import { UserService } from '../../core/services/user.service';
 import { User, UserRole } from '../../core/models/user.model';
+import { EMAIL_REGEX } from '../../core/constants/validation.constants';
 
 @Component({
   selector: 'app-user-management',
@@ -29,7 +30,7 @@ export class UserManagementComponent {
 
   readonly userForm = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.maxLength(80)]],
-    username: ['', [Validators.required, Validators.email]],
+    username: ['', [Validators.required, Validators.pattern(EMAIL_REGEX)]],
     role: this.fb.nonNullable.control<UserRole>('USER', Validators.required),
     companyId: ['', Validators.required],
     active: [true],

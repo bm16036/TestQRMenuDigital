@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/services/auth.service';
@@ -45,6 +45,13 @@ export class ProductManagementComponent {
     })
   });
 
+  readonly categoryIdControl = this.productForm.controls.categoryId;
+
+  private readonly refreshCategoryValidation = effect(() => {
+    this.categories();
+    this.clearInactiveCategoryError();
+  });
+
   readonly formattedPricePreview = computed(() => {
     const price = this.productForm.get('price')?.value ?? 0;
     return Number(price).toFixed(2);
@@ -71,6 +78,10 @@ export class ProductManagementComponent {
     this.categoryService.load(companyId).subscribe();
     this.menuService.load(companyId).subscribe();
     this.productService.load({ companyId }).subscribe();
+
+    this.categoryIdControl.valueChanges.subscribe(() => {
+      this.clearInactiveCategoryError();
+    });
   }
 
   getCategoryName(categoryId: string) {
@@ -104,6 +115,20 @@ export class ProductManagementComponent {
   save() {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const selectedCategory = this.categories().find(
+      (category) => category.id === this.categoryIdControl.value
+    );
+
+    if (!selectedCategory?.active) {
+      const existingErrors = this.categoryIdControl.errors ?? {};
+      this.categoryIdControl.setErrors({
+        ...existingErrors,
+        inactiveCategory: true
+      });
+      this.categoryIdControl.markAsTouched();
       return;
     }
 
@@ -166,5 +191,25 @@ export class ProductManagementComponent {
 
     control.markAsTouched();
     control.updateValueAndValidity();
+  }
+
+  private clearInactiveCategoryError() {
+    const errors = this.categoryIdControl.errors;
+    if (!errors?.['inactiveCategory']) {
+      return;
+    }
+
+    const selectedId = this.categoryIdControl.value;
+    if (!selectedId) {
+      const { inactiveCategory, ...rest } = errors;
+      this.categoryIdControl.setErrors(Object.keys(rest).length ? rest : null);
+      return;
+    }
+
+    const category = this.categories().find((item) => item.id === selectedId);
+    if (category?.active) {
+      const { inactiveCategory, ...rest } = errors;
+      this.categoryIdControl.setErrors(Object.keys(rest).length ? rest : null);
+    }
   }
 }
