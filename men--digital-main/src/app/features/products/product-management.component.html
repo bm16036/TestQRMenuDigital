@@ -52,19 +52,34 @@
           </select>
         </label>
 
-        <label class="form__field">
-          <span>Menús</span>
-          <select formControlName="menuIds" multiple size="4">
-            <option *ngFor="let menu of menus()" [value]="menu.id" [disabled]="!menu.active">
-              {{ menu.name }}
-              {{ menu.active ? '' : '(Inactivo)' }}
-            </option>
-          </select>
+        <fieldset class="form__field form__field--checkbox-group">
+          <legend>Menús</legend>
+          <div class="checkbox-group" *ngIf="menus().length; else noMenusAvailable">
+            <label
+              class="checkbox-option"
+              *ngFor="let menu of menus()"
+              [class.checkbox-option--inactive]="!menu.active"
+              [title]="menu.name"
+            >
+              <input
+                type="checkbox"
+                [value]="menu.id"
+                [checked]="isMenuSelected(menu.id)"
+                [disabled]="!menu.active"
+                (change)="toggleMenuSelection(menu.id, $event.target.checked)"
+              />
+              <span class="checkbox-option__name">{{ menu.name }}</span>
+              <span class="checkbox-option__status" *ngIf="!menu.active">(Inactivo)</span>
+            </label>
+          </div>
+          <ng-template #noMenusAvailable>
+            <p class="checkbox-group__empty">Aún no hay menús disponibles.</p>
+          </ng-template>
           <small class="form__hint">Selecciona uno o varios menús donde se mostrará el producto.</small>
           <small class="form__error" *ngIf="productForm.get('menuIds')?.invalid && productForm.get('menuIds')?.touched">
             El producto debe pertenecer al menos a un menú activo.
           </small>
-        </label>
+        </fieldset>
 
         <button type="submit" class="form__submit" [disabled]="isSaving()">
           {{ isSaving() ? 'Guardando...' : 'Guardar producto' }}

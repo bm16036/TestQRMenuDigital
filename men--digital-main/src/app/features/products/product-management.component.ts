@@ -137,4 +137,28 @@ export class ProductManagementComponent {
     const lookup = this.menuLookup();
     return menuIds.map((id) => lookup.get(id)).filter((name): name is string => !!name);
   }
+
+  isMenuSelected(menuId: string) {
+    return this.productForm.controls.menuIds.value.includes(menuId);
+  }
+
+  toggleMenuSelection(menuId: string, checked: boolean) {
+    const control = this.productForm.controls.menuIds;
+    const current = control.value;
+
+    let updated = current;
+
+    if (checked && !current.includes(menuId)) {
+      updated = [...current, menuId];
+    } else if (!checked && current.includes(menuId)) {
+      updated = current.filter((id) => id !== menuId);
+    }
+
+    if (updated !== current) {
+      control.setValue(updated);
+    }
+
+    control.markAsTouched();
+    control.updateValueAndValidity();
+  }
 }
